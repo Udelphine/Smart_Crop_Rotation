@@ -1,0 +1,64 @@
+DATA FLOW DIAGRAM - Smart Crop Rotation System
+
+┌─────────────────┐         ┌─────────────────┐         ┌─────────────────┐
+│   EXTERNAL      │         │     PROCESS     │         │    DATA STORE   │
+│    ENTITIES     │         │                 │         │                 │
+├─────────────────┤         ├─────────────────┤         ├─────────────────┤
+│                 │         │                 │         │                 │
+│    Farmer       │────────►│ 1.0 Collect     │────────►│   Crop          │
+│                 │         │    Field Data   │         │   Database      │
+│                 │         │                 │         │                 │
+│  Weather API    │────────►│                 │         │                 │
+│                 │         │                 │         │                 │
+│  Soil Sensor    │────────►│                 │         │                 │
+│                 │         │                 │         │                 │
+└─────────────────┘         └────────┬────────┘         └─────────────────┘
+                                     │
+                                     │
+                              ┌──────▼──────┐
+                              │             │
+                              │ 2.0 Analyze │
+                              │   Soil      │
+                              │   Health    │
+                              │             │
+                              └──────┬──────┘
+                                     │
+                              ┌──────▼──────┐         ┌─────────────────┐
+                              │             │         │                 │
+                              │ 3.0 Select  │────────►│   Rotation      │
+                              │  Rotation   │         │   Strategies    │
+                              │  Strategy   │         │   Database      │
+                              │             │         │                 │
+                              └──────┬──────┘         └─────────────────┘
+                                     │
+                              ┌──────▼──────┐
+                              │             │
+                              │ 4.0 Generate│
+                              │   Rotation  │
+                              │    Plan     │
+                              │             │
+                              └──────┬──────┘
+                                     │
+                              ┌──────▼──────┐         ┌─────────────────┐
+                              │             │         │                 │
+                              │ 5.0 Save &  │────────►│   Rotation      │
+                              │   Display   │         │   Plans DB      │
+                              │    Plan     │         │                 │
+                              │             │         │                 │
+                              └─────────────┘         └─────────────────┘
+
+
+DATA FLOWS:
+1. Farmer → (Field Data) → Process 1.0 → (Validated Data) → Crop DB
+2. Weather API → (Weather Data) → Process 1.0
+3. Soil Sensor → (Soil Metrics) → Process 1.0
+4. Process 1.0 → (Aggregated Data) → Process 2.0 → (Analysis Results) → Process 3.0
+5. Process 3.0 → (Selected Strategy) → Process 4.0 → (Rotation Plan) → Process 5.0
+6. Process 5.0 → (Final Plan) → Rotation Plans DB
+7. Process 5.0 → (Display Data) → Farmer
+
+DATA STORES:
+- Crop Database: Stores crop information (name, family, requirements)
+- Rotation Strategies: Stores available algorithms (nutrient, pest, seasonal)
+- Rotation Plans: Stores historical and current rotation plans
+- User Database: Stores farmer profiles and preferences

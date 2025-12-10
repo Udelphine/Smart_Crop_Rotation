@@ -1,0 +1,67 @@
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│    Start    │    │   Farmer    │    │   System    │    │   Database  │
+│   (User     │    │   Actions   │    │  Processes  │    │   Actions   │
+│  Access)    │    │             │    │             │    │             │
+└──────┬──────┘    └──────┬──────┘    └──────┬──────┘    └──────┬──────┘
+       │                  │                   │                  │
+┌──────▼──────────────────▼───────────────────▼──────────────────▼──────┐
+│                                                                       │
+│                            User Authentication                        │
+│                      ┌─────────────────────────┐                      │
+│                      │                         │                      │
+│                ┌─────▼─────┐             ┌─────▼─────┐                │
+│                │   Login   │             │  Register │                │
+│                │   Page    │             │   Page    │                │
+│                └─────┬─────┘             └─────┬─────┘                │
+│                      │                         │                      │
+│                ┌─────▼─────┐             ┌─────▼─────┐                │
+│                │ Validate  │             │ Create   │                │
+│                │ Credentials│             │ New User │                │
+│                └─────┬─────┘             └─────┬─────┘                │
+│                      │                         │                      │
+│                ┌─────▼─────┐             ┌─────▼─────┐                │
+│                │ Generate  │             │ Save to  │                │
+│                │   JWT     │             │ Database │                │
+│                └─────┬─────┘             └──────────┘                │
+│                      │                                                 │
+└──────────────────────┼─────────────────────────────────────────────────┘
+                       │
+┌──────────────────────▼─────────────────────────────────────────────────┐
+│                                                                       │
+│                         Main Dashboard                                 │
+│                      ┌─────────────────┐                              │
+│                      │   View Fields   │                              │
+│                      │   View Crops    │                              │
+│                      │   View Plans    │                              │
+│                      └────────┬────────┘                              │
+│                               │                                       │
+│                      ┌────────▼────────┐                              │
+│                      │  Select Field   │                              │
+│                      └────────┬────────┘                              │
+│                               │                                       │
+│                      ┌────────▼────────┐                              │
+│                      │  Enter Soil     │                              │
+│                      │     Data        │                              │
+│                      └────────┬────────┘                              │
+│                               │                                       │
+│                      ┌────────▼────────┐                              │
+│                      │ Choose Strategy │                              │
+│                      └────────┬────────┘                              │
+│                               │                                       │
+│                      ┌────────▼────────┐                              │
+│                      │ Generate Plan   │                              │
+│                      └────────┬────────┘                              │
+│                               │                                       │
+│                      ┌────────▼────────┐                              │
+│                      │  Save/Export    │                              │
+│                      │     Plan        │                              │
+│                      └─────────────────┘                              │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+FLOW DESCRIPTION:
+1. User accesses system → Login/Register
+2. Successful authentication → Main Dashboard
+3. From Dashboard: View existing data or create new plan
+4. Create Plan Flow: Select Field → Enter Soil Data → Choose Strategy → Generate Plan
+5. Final Step: Save plan to database or export as PDF

@@ -1,0 +1,72 @@
+SEQUENCE DIAGRAM - Generate Rotation Plan
+
+Participants:
+- Farmer: The system user (farmer/agronomist)
+- Frontend: Web interface or mobile app
+- API: Express.js REST API
+- Auth Service: Authentication middleware
+- Rotation Service: Business logic layer
+- Strategy Service: Strategy pattern implementation
+- Database: SQLite database
+
+Sequence:
+
+1. Authentication Phase:
+   Farmer->>Frontend: Enter credentials
+   Frontend->>API: POST /api/v1/auth/login
+   API->>Auth Service: Validate credentials
+   Auth Service->>Database: Query user
+   Database-->>Auth Service: Return user data
+   Auth Service-->>API: Generate JWT token
+   API-->>Frontend: Return token + user data
+   Frontend-->>Farmer: Show dashboard
+
+2. Plan Creation Phase:
+   Farmer->>Frontend: Click "Create New Plan"
+   Frontend->>API: GET /api/v1/crops (with token)
+   API->>Auth Service: Verify JWT token
+   Auth Service-->>API: Token valid
+   API->>Database: Fetch crops
+   Database-->>API: Return crops list
+   API-->>Frontend: Return crops data
+   
+   Frontend->>Farmer: Display form with crops list
+   Farmer->>Frontend: Fill form (select field, crops, strategy)
+   Frontend->>API: POST /api/v1/rotation/plans (with form data + token)
+   API->>Auth Service: Verify token
+   Auth Service-->>API: Token valid
+   API->>Rotation Service: Create rotation plan
+   
+   Rotation Service->>Strategy Service: Execute selected strategy
+   Note over Strategy Service: Strategy Pattern in action
+   Strategy Service->>Database: Query crop compatibility
+   Database-->>Strategy Service: Return compatibility data
+   Strategy Service-->>Rotation Service: Return recommendations
+   
+   Rotation Service->>Database: Save rotation plan
+   Database-->>Rotation Service: Confirm save
+   Rotation Service-->>API: Return created plan
+   API-->>Frontend: Return success + plan data
+   Frontend-->>Farmer: Display generated plan
+
+3. Alternative Flow - Invalid Data:
+   Farmer->>Frontend: Submit invalid form
+   Frontend->>API: POST /api/v1/rotation/plans (invalid data)
+   API->>Validation: Check data
+   Validation-->>API: Validation failed
+   API-->>Frontend: Return 400 error
+   Frontend-->>Farmer: Show error message
+
+4. Alternative Flow - Unauthorized:
+   Note over Farmer: Token expired
+   Frontend->>API: Request with expired token
+   API->>Auth Service: Verify token
+   Auth Service-->>API: Token invalid
+   API-->>Frontend: Return 401 unauthorized
+   Frontend->>Farmer: Redirect to login
+
+TIMING NOTES:
+- Authentication: 100-500ms
+- Crop Fetch: 200-800ms
+- Plan Generation: 500-2000ms (depends on strategy complexity)
+- Total Response Time: < 3 seconds for optimal UX
