@@ -21,10 +21,9 @@ class CropService {
       where.season = { [Op.like]: `%${filters.season}%` };
     }
     
-    const crops = await Crop.findAll({
-      where,
-      order: [['name', 'ASC']],
-    });
+    if (filters.owner) where.owner_email = filters.owner;
+
+    const crops = await Crop.findAll({ where, order: [['name', 'ASC']] });
     
     return crops;
   } catch (error) {
@@ -63,7 +62,24 @@ class CropService {
       throw new Error('Crop with this name already exists');
     }
 
-    const crop = await Crop.create(cropData);
+    // normalize owner email if provided
+    if (cropData.owner_email) cropData.owner_email = String(cropData.owner_email).toLowerCase().trim();
+
+    const crop = await Crop.create({
+      name: cropData.name,
+      scientific_name: cropData.scientific_name,
+      family: cropData.family,
+      nutrient_requirement: cropData.nutrient_requirement,
+      water_requirement: cropData.water_requirement,
+      season: cropData.season,
+      growth_duration: cropData.growth_duration,
+      nitrogen_fixer: cropData.nitrogen_fixer,
+      soil_type: cropData.soil_type,
+      is_active: cropData.is_active !== undefined ? cropData.is_active : true,
+      acidity: cropData.acidity || 0,
+      owner_email: cropData.owner_email || null,
+    });
+
     return crop;
   } catch (error) {
     throw new Error(`Failed to create crop: ${error.message}`);
@@ -78,16 +94,9 @@ class CropService {
    */
   async updateCrop(id, updateData) {
     try {
-      const crop = await Crop.findByIdAndUpdate(
-        id,
-        { $set: updateData },
-        { new: true, runValidators: true }
-      );
-      
-      if (!crop) {
-        throw new Error('Crop not found');
-      }
-      
+      const crop = await Crop.findByPk(id);
+      if (!crop) throw new Error('Crop not found');
+      await crop.update(updateData);
       return crop;
     } catch (error) {
       throw new Error(`Failed to update crop: ${error.message}`);
@@ -101,16 +110,9 @@ class CropService {
    */
   async deleteCrop(id) {
     try {
-      const crop = await Crop.findByIdAndUpdate(
-        id,
-        { $set: { isActive: false } },
-        { new: true }
-      );
-      
-      if (!crop) {
-        throw new Error('Crop not found');
-      }
-      
+      const crop = await Crop.findByPk(id);
+      if (!crop) throw new Error('Crop not found');
+      await crop.update({ is_active: false });
       return { message: 'Crop deleted successfully' };
     } catch (error) {
       throw new Error(`Failed to delete crop: ${error.message}`);
@@ -151,13 +153,16 @@ class CropService {
    */
   async searchCrops(searchTerm) {
     try {
-      return await Crop.find({
-        isActive: true,
-        $or: [
-          { name: { $regex: searchTerm, $options: 'i' } },
-          { scientificName: { $regex: searchTerm, $options: 'i' } },
-        ],
-      }).limit(10);
+      return await Crop.findAll({
+        where: {
+          is_active: true,
+          [Op.or]: [
+            { name: { [Op.like]: `%${searchTerm}%` } },
+            { scientific_name: { [Op.like]: `%${searchTerm}%` } },
+          ],
+        },
+        limit: 10,
+      });
     } catch (error) {
       throw new Error(`Failed to search crops: ${error.message}`);
     }

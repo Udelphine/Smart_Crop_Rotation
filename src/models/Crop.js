@@ -98,6 +98,19 @@ const Crop = database.getSequelize().define('Crop', {
     allowNull: false,
     defaultValue: true,
   },
+  acidity: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    defaultValue: 0,
+    validate: {
+      min: 0,
+      max: 100,
+    },
+  },
+  owner_email: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }, {
   tableName: 'crops',
   timestamps: true,

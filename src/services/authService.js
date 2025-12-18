@@ -12,23 +12,29 @@ class AuthService {
    */
   async register(userData) {
     try {
-      // Check if user already exists
-      const existingUser = await User.findOne({ email: userData.email });
-      if (existingUser) {
-        throw new AppError('Email already registered', 400);
+      // Accept either name or email as identifier
+      const identifier = (userData.email || userData.name || '').trim();
+      let email = null;
+      let name = null;
+      if (identifier.includes('@')) {
+        email = identifier.toLowerCase();
+        name = userData.name || email.split('@')[0];
+      } else {
+        name = identifier || `user${Date.now()}`;
+        email = userData.email ? String(userData.email).toLowerCase() : null;
       }
 
-      // Create new user
-      const user = new User(userData);
-      await user.save();
+      // Check existing user by email or name
+      if (email) {
+        const existingByEmail = await User.findOne({ where: { email } });
+        if (existingByEmail) throw new AppError('Email already registered', 400);
+      }
+      const existingByName = await User.findOne({ where: { name } });
+      if (existingByName) throw new AppError('Name already registered', 400);
 
-      // Generate token
-      const token = this.generateToken(user._id);
-
-      return {
-        user: user.getProfile(),
-        token,
-      };
+      const createData = { name, email, password: userData.password };
+      const user = await User.create(createData);
+      return { user: user.getProfile() };
     } catch (error) {
       throw new AppError(`Registration failed: ${error.message}`, 400);
     }
@@ -42,8 +48,14 @@ class AuthService {
    */
   async login(email, password) {
     try {
-      // Find user
-      const user = await User.findOne({ email, isActive: true });
+      // Accept either email or name in the identifier parameter
+      const identifier = (email || '').trim();
+      let user = null;
+      if (identifier.includes('@')) {
+        user = await User.findOne({ where: { email: identifier.toLowerCase(), is_active: true } });
+      } else {
+        user = await User.findOne({ where: { name: identifier, is_active: true } });
+      }
       if (!user) {
         throw new AppError('Invalid credentials', 401);
       }
@@ -54,16 +66,12 @@ class AuthService {
         throw new AppError('Invalid credentials', 401);
       }
 
-      // Update last login
-      user.lastLogin = new Date();
+      // Update last login (column is last_login)
+      user.last_login = new Date();
       await user.save();
-
-      // Generate token
-      const token = this.generateToken(user._id);
 
       return {
         user: user.getProfile(),
-        token,
       };
     } catch (error) {
       throw new AppError(`Login failed: ${error.message}`, 401);
@@ -101,7 +109,7 @@ class AuthService {
    */
   async getProfile(userId) {
     try {
-      const user = await User.findById(userId);
+      const user = await User.findByPk(userId);
       if (!user) {
         throw new AppError('User not found', 404);
       }
@@ -123,17 +131,9 @@ class AuthService {
       delete updateData.password;
       delete updateData.email;
       delete updateData.role;
-
-      const user = await User.findByIdAndUpdate(
-        userId,
-        { $set: updateData },
-        { new: true, runValidators: true }
-      );
-
-      if (!user) {
-        throw new AppError('User not found', 404);
-      }
-
+      const user = await User.findByPk(userId);
+      if (!user) throw new AppError('User not found', 404);
+      await user.update(updateData);
       return user.getProfile();
     } catch (error) {
       throw new AppError(`Failed to update profile: ${error.message}`, 400);

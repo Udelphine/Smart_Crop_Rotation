@@ -11,6 +11,22 @@ const router = express.Router();
 // Apply sanitization to all routes
 router.use(sanitizeInput);
 
+// API root - no auth required
+router.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Smart Crop Rotation API is running',
+    apiVersion: process.env.API_VERSION || 'v1',
+    docs: '/api/v1/health',
+  });
+});
+
+// Soil endpoints (public)
+const soilController = require('./controllers/soilController');
+router.get('/soil', soilController.getSoil);
+router.post('/soil', express.json(), soilController.setSoil);
+router.get('/rotation/check', soilController.checkAcidity);
+
 // Public routes
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
@@ -22,6 +38,8 @@ router.get('/crops/search', cropController.searchCrops);
 router.get('/crops/family/:family', cropController.getCropsByFamily);
 router.get('/crops/:id', validateObjectId(), cropController.getCropById);
 router.get('/crops/:cropId/compatible', validateObjectId('cropId'), cropController.getCompatibleCrops);
+// Public create crop route (any user can add a crop with owner_email)
+router.post('/crops', cropController.createCrop);
 
 // Protected routes (require authentication)
 router.use(authenticate);
@@ -30,8 +48,7 @@ router.use(authenticate);
 router.get('/auth/profile', authController.getProfile);
 router.put('/auth/profile', authController.updateProfile);
 
-// Protected crop routes (admin only for write operations)
-router.post('/crops', authorize('admin'), cropController.createCrop);
+// Protected crop update/delete (admin only)
 router.put('/crops/:id', authorize('admin'), validateObjectId(), cropController.updateCrop);
 router.delete('/crops/:id', authorize('admin'), validateObjectId(), cropController.deleteCrop);
 

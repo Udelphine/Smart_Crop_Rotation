@@ -11,24 +11,24 @@ const User = database.getSequelize().define('User', {
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     validate: {
-      notEmpty: true,
+      notEmpty: false,
     },
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     unique: true,
     validate: {
-      isEmail: true,
+      // allow non-email identifiers; skip strict email validation
     },
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      len: [6, 100],
+      len: [1, 100],
     },
   },
   role: {
@@ -87,6 +87,11 @@ const User = database.getSequelize().define('User', {
       }
       if (user.email) {
         user.email = user.email.toLowerCase().trim();
+      }
+      // If no name provided, derive from email local-part or fallback
+      if (!user.name && user.email) {
+        const local = user.email.split('@')[0];
+        user.name = local || 'User';
       }
     },
     beforeUpdate: async (user) => {

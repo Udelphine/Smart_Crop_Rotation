@@ -1,5 +1,6 @@
 // src/server.js
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -30,6 +31,9 @@ if (process.env.NODE_ENV === 'development') {
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static frontend (public folder)
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Database connection
 database;

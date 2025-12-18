@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Smart Crop Rotation — UI</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Smart Crop Rotation</h1>
+
+      <section class="grid">
+        <div class="card">
+          <h3>Service Status</h3>
+          <p class="muted">Quick health check and API info</p>
+          <div class="row">
+            <button id="healthBtn" class="primary">Check Health</button>
+            <button id="apiRootBtn">API Root</button>
+          </div>
+          <div id="healthResult" class="result"></div>
+        </div>
+
+        <div class="card">
+          <h3>Crops</h3>
+          <p class="muted">Browse active crops</p>
+          <div class="row">
+            <button id="listCropsBtn" class="primary">Refresh List</button>
+            <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+              <input id="soilHpInput" placeholder="Soil HP (50)" style="width:120px;padding:8px;border-radius:6px;border:1px solid #eee" />
+              <button id="setSoilBtn">Set Soil HP</button>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding:8px;border-radius:6px;border:1px dashed #eef2f7;background:#fcfeff">
+            <div style="font-weight:600;margin-bottom:8px">Add a Crop</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <input id="newCropName" placeholder="Name" style="flex:1;min-width:140px;padding:8px;border-radius:6px;border:1px solid #eee" />
+              <input id="newCropFamily" placeholder="Family (e.g., Poaceae)" style="width:180px;padding:8px;border-radius:6px;border:1px solid #eee" />
+              <input id="newCropAcidity" placeholder="Acidity (0-100)" style="width:140px;padding:8px;border-radius:6px;border:1px solid #eee" />
+              <input id="newCropOwner" placeholder="Owner email (optional)" style="width:220px;padding:8px;border-radius:6px;border:1px solid #eee" />
+              <button id="createCropBtn" class="primary">Create Crop</button>
+            </div>
+          </div>
+          <div id="cropsContainer" class="list"></div>
+        </div>
+
+        <div class="card">
+          <h3>Authentication</h3>
+          <p class="muted">Register or login to access protected routes</p>
+          <div class="formCol">
+            <input id="identifier" placeholder="Name or Email" type="text" />
+            <input id="password" placeholder="Password" type="password" />
+            <div class="row">
+              <button id="registerBtn">Register</button>
+              <button id="loginBtn" class="primary">Login</button>
+            </div>
+            <div class="row">
+              <button id="profileBtn">Get Profile</button>
+              <button id="logoutBtn">Logout</button>
+            </div>
+          </div>
+          <div id="authResult" class="result"></div>
+        </div>
+
+        <div class="card">
+          <h3>My Account</h3>
+          <p class="muted">Simple login — shows crops you created</p>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+            <div id="currentUser" style="font-weight:600;color:#0b78ff">(not logged in)</div>
+            <div style="margin-left:auto">
+              <button id="logoutBtn">Logout</button>
+            </div>
+          </div>
+          <div class="result" style="margin-top:12px">Use the Authentication card to login or register.</div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
