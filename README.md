@@ -1,4 +1,4 @@
-# 🌱 Smart Crop Rotation Management System
+# Smart Crop Rotation Management System
 
 <div align="center">
 
@@ -9,73 +9,107 @@
 ![Docker](https://img.shields.io/badge/Docker-✓-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-**An intelligent crop rotation planning system for sustainable agriculture**
+**An intelligent system for optimizing sustainable crop rotation planning**
 
 </div>
 
-## 📋 Table of Contents
-- [Overview](#-overview)
-- [Features](#-features)
-- [System Architecture](#-system-architecture)
-- [Installation](#-installation)
-- [API Documentation](#-api-documentation)
-- [Testing](#-testing)
-- [Docker Deployment](#-docker-deployment)
-- [Design Patterns](#-design-patterns)
-- [Project Structure](#-project-structure)
-- [Requirements Met](#-requirements-met)
-- [Contributing](#-contributing)
-- [License](#-license)
+---
 
-## 🎯 Overview
+# 1. Introduction
 
-The **Smart Crop Rotation Management System** is a comprehensive web application designed to help farmers and agricultural experts plan optimal crop rotations. By implementing various scientific strategies, the system improves soil health, maximizes crop yield, and manages pests effectively.
+Agriculture remains a critical sector in many developing nations, especially for smallholder farmers who rely heavily on soil fertility and seasonal crop cycles. Poor planning of crop rotation often results in soil nutrient depletion, pest proliferation, and reduced yields. To address these challenges, this project introduces the **Smart Crop Rotation Management System**, a decision-support platform designed to recommend optimal crop rotation sequences using scientifically grounded algorithms.
 
-### 🎓 **Academic Context**
-This project was developed as a **Final Exam Project** for Software Engineering, demonstrating proficiency in:
-- Software Design Principles
-- Design Patterns Implementation
-- Clean Code Practices
-- Testing Strategies
-- Containerization
-- Version Control
+The system integrates software engineering best practices, clean code principles, the Strategy Design Pattern, UML modelling, testing methodologies, and containerized deployment. It demonstrates an end-to-end development workflow appropriate for academic evaluation and real-world application.
 
-## ✨ Features
+---
 
-### 🔄 **Rotation Strategies**
-- **Nutrient-Based Strategy**: Balances soil nutrients through intelligent crop sequencing
-- **Pest Management Strategy**: Breaks pest and disease cycles through crop diversity
-- **Seasonal Strategy**: Matches crops to seasonal conditions and climate
+# 2. Final Exam Project Details
 
-### 🔧 **Technical Features**
-- **RESTful API**: Complete CRUD operations with proper HTTP methods
-- **Authentication & Authorization**: JWT-based security with role-based access
-- **SQLite Database**: File-based, zero-configuration database
-- **Strategy Design Pattern**: Extensible architecture for new algorithms
-- **Comprehensive Testing**: Unit, integration, and API tests
-- **Docker Containerization**: Easy deployment with Docker and Docker Compose
-- **Code Quality**: ESLint + Prettier following Google JavaScript standards
+### **Topic**
+Smart Crop Rotation Management System
 
-## 🏗️ System Architecture
+### **Case Study**
+Improving soil health and optimizing crop rotation for smallholder farmers in Rwanda through intelligent decision-making tools.
 
-### High-Level Architecture
+---
 
-┌─────────────────┐ HTTP/REST ┌─────────────────┐ Database ┌─────────────────┐
-│ Client │ ◄─────────────► │ Express API │ ◄────────────► │ SQLite DB │
-│ (Browser/ │ │ (Node.js) │ │ (File-based) │
-│ Mobile App) │ └─────────────────┘ └─────────────────┘
-└─────────────────┘ │ │
-┌──────▼──────┐ ┌──────▼──────┐
-│ Business │ │ Strategy │
-│ Logic │ │ Pattern │
-│ (Services) │ │ (Algorithms)│
-└──────────────┘ └──────────────┘
+# 3. Table of Contents
+- [Introduction](#1-introduction)
+- [Final Exam Project Details](#2-final-exam-project-details)
+- [Requirements Mapping](#4-requirements-mapping)
+- [Features](#5-features)
+- [System Architecture](#6-system-architecture)
+- [UML Diagrams](#7-uml-diagrams)
+- [Installation](#8-installation)
+- [API Documentation](#9-api-documentation)
+- [Testing](#10-testing)
+- [Docker Deployment](#11-docker-deployment)
+- [Design Pattern](#12-design-pattern)
+- [Project Structure](#13-project-structure)
+- [License](#14-license)
 
-### Design Pattern: Strategy Pattern
-The system implements the **Strategy Design Pattern** for crop rotation algorithms:
+---
 
-```javascript
-// Three concrete strategies implemented
-1. NutrientBasedStrategy - Analyzes soil nutrients and recommends crops
-2. PestManagementStrategy - Focuses on breaking pest cycles
-3. SeasonalStrategy - Considers seasonal suitability and climate
+# 4. Requirements Mapping
+
+| Exam Requirement | Implementation in This Project |
+|------------------|-------------------------------|
+| Real-life problem | Soil degradation, pest buildup, unplanned rotations |
+| Software design approach | UML, high-level architecture, Strategy Pattern |
+| Programming language | JavaScript (Node.js + Express) |
+| Best coding practices | ESLint + Prettier + Google JS Standards |
+| Version control | Git + GitHub (this repository) |
+| Use one design pattern | Strategy Pattern for crop rotation logic |
+| Testing plan | Jest unit, integration, API tests |
+| Dockerization | Dockerfile + docker-compose.yml |
+
+---
+
+# 5. Features
+
+### Core Functionalities
+- Nutrient-based crop rotation recommendations  
+- Pest management algorithms  
+- Seasonal suitability analysis  
+
+### Technical Features
+- REST API with CRUD operations  
+- JWT authentication and authorization  
+- SQLite lightweight database  
+- Modular architecture following clean code practices  
+- Automated test suite using Jest  
+- Docker-ready deployment  
+
+---
+
+# 6. System Architecture
+
+Client (Browser/Mobile)
+│
+HTTP/REST API
+│
+Express.js Server
+│
+Business Logic Layer
+│
+Strategy Pattern Engine
+│
+SQLite DB
+
+---
+
+# 7. Diagrams
+
+### **1. Activity Diagram**
+
+<img width="969" height="1272" alt="image" src="https://github.com/user-attachments/assets/59768b79-0884-46d5-96a9-f31015955b64" />
+
+### **2. Data Flow Diagram (DFD)**
+
+<img width="1280" height="656" alt="image" src="https://github.com/user-attachments/assets/7f6eceab-8a26-4518-8d8b-144d250d96ce" />
+
+### **3. Sequence Diagram**
+
+<img width="1055" height="1279" alt="image" src="https://github.com/user-attachments/assets/c8a7b4f1-f8c6-44d0-808e-578e40938239" />
+
+---
